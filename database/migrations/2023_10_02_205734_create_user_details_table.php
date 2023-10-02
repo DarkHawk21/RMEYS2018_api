@@ -15,6 +15,7 @@ class CreateUserDetailsTable extends Migration
     {
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('identifier')
                 ->unique();
             $table->string('name');
@@ -26,6 +27,9 @@ class CreateUserDetailsTable extends Migration
             $table->unsignedBigInteger('language_id');
             $table->timestamps();
 
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
             $table->foreign('language_id')
                 ->references('id')
                 ->on('languages');

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\WorkshopController;
+use App\Http\Controllers\Api\V1\LanguageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +25,8 @@ Route::prefix('v1')->group(function() {
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('me', [AuthController::class, 'me'])->name('me');
     });
+
+    Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
+    Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');
+    Route::get('total-on-languages', [LanguageController::class, 'getTotalRegisters'])->name('total-on-languages');
 });
