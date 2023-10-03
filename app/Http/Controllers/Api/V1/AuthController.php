@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\User;
+use App\Models\UserRole;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,20 +28,24 @@ class AuthController extends Controller
     public function register()
     {
         $credentials = request(['email', 'password']);
-        $data = request(['email', 'password']);
+        $data = request(['email', 'password', 'role']);
 
         $validator = Validator::make($data, [
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:50',
+            'role' => 'required|string'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->messages()], 400);
         }
 
-        $user = User::create([
+        User::create([
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'role_id' => UserRole::where('code', $data['role'])
+                ->first()
+                ->id
         ]);
 
         if (!$token = auth()->attempt($credentials)) {

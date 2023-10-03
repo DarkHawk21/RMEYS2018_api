@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use DB;
 use Log;
 use App\Models\User;
+use App\Models\UserRole;
 use App\Models\Language;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
@@ -14,7 +15,6 @@ class UserController extends Controller
 {
     public function getTotalRegisters(Request $request)
     {
-        Log::debug("Entró");
         $isAsesor = $request->input('social_service', 0);
 
         $totalRegisters = User::whereHas('userDetail', function($query) use($isAsesor) {
@@ -40,7 +40,10 @@ class UserController extends Controller
                         ],
                         [
                             'email' => $record['correo'],
-                            'password' => bcrypt($record['ncuenta'])
+                            'password' => bcrypt($record['ncuenta']),
+                            'role_id' => UserRole::where('code', 'advisor')
+                                ->first()
+                                ->id
                         ]
                     );
 
