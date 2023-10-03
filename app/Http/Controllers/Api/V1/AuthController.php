@@ -9,16 +9,6 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-
-    /**
      * Get a JWT via given credentials.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -37,10 +27,9 @@ class AuthController extends Controller
     public function register()
     {
         $credentials = request(['email', 'password']);
-        $data = request(['name', 'email', 'password']);
+        $data = request(['email', 'password']);
 
         $validator = Validator::make($data, [
-            'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:50',
         ]);
@@ -50,7 +39,6 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password'])
         ]);

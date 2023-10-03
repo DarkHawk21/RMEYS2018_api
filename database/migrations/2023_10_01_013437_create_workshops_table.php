@@ -19,26 +19,20 @@ class CreateWorkshopsTable extends Migration
                 ->nullable();
             $table->string('title', 255)
                 ->nullable();
-            $table->string('color', 255)
-                ->nullable();
-            $table->string('textColor', 255)
-                ->nullable();
             $table->dateTime('start')
                 ->nullable();
             $table->dateTime('end')
                 ->nullable();
-            $table->string('duracion', 50)
-                ->nullable();
-            $table->integer('cupomin')
-                ->nullable();
-            $table->integer('cupomax')
-                ->nullable();
-            $table->integer('cupoactual')
-                ->nullable();
-            $table->string('asesor', 100)
-                ->nullable();
-            $table->string('idioma', 50)
-                ->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('language_id');
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
+
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('languages');
         });
     }
 

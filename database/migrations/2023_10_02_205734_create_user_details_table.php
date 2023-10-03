@@ -16,12 +16,12 @@ class CreateUserDetailsTable extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->integer('external_id');
             $table->string('identifier')
                 ->unique();
             $table->string('name');
-            $table->string('last_name');
-            $table->string('mother_last_name');
-            $table->string('cellphone');
+            $table->string('cellphone')
+                ->nullable();
             $table->integer('social_service')
                 ->default(0);
             $table->unsignedBigInteger('language_id');

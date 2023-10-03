@@ -18,15 +18,23 @@ use App\Http\Controllers\Api\V1\LanguageController;
 */
 
 Route::prefix('v1')->group(function() {
-    Route::group(['middleware' => ['api']], function() {
-        Route::post('login', [AuthController::class, 'login'])->name('login');
-        Route::post('register', [AuthController::class, 'register'])->name('register');
+    // Credentials
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+
+    Route::group(['middleware' => ['auth:api']], function() {
+        // Auth
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('me', [AuthController::class, 'me'])->name('me');
-    });
 
-    Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
-    Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');
-    Route::get('total-on-languages', [LanguageController::class, 'getTotalRegisters'])->name('total-on-languages');
+        // Resources
+        Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
+        Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');
+        Route::get('total-on-languages', [LanguageController::class, 'getTotalRegisters'])->name('total-on-languages');
+
+        Route::post('sync-users', [UserController::class, 'syncRegisters'])->name('sync-users');
+        Route::post('sync-workshops', [WorkshopController::class, 'syncRegisters'])->name('sync-workshops');
+        Route::post('sync-languages', [LanguageController::class, 'syncRegisters'])->name('sync-languages');
+    });
 });
