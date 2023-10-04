@@ -32,8 +32,29 @@ class AdvisorScheduleController extends Controller
                 'language' => $advisorSchedule->advisor->userDetail->language->name,
                 'img' => '',
                 'name' => $advisorSchedule->advisor->userDetail->name
+            ]
+        ];
+
+        $recurrence = [
+            "startAt" => $advisorSchedule->recurrence->dtstart,
+            "repeatTimes" => [
+                "times" => $advisorSchedule->recurrence->interval,
+                "type" => $advisorSchedule->recurrence->freq,
             ],
-            'recurrenceType' => ''
+            "repeatDays" => json_decode($advisorSchedule->recurrence->byweekday),
+            "finishAt" => [
+                "type" => $advisorSchedule->recurrence->until
+                    ? 'date'
+                    : ($advisorSchedule->recurrence->count
+                        ? 'times'
+                        : 'never'),
+                "value" => $advisorSchedule->recurrence->until
+                    ? $advisorSchedule->recurrence->until
+                    : ($advisorSchedule->recurrence->count
+                        ? $advisorSchedule->recurrence->count
+                        : 1)
+            ],
+            "exdate" => json_decode($advisorSchedule->recurrence->exdate)
         ];
 
         $advisorScheduleFinal = [
@@ -46,7 +67,10 @@ class AdvisorScheduleController extends Controller
             'extendedProps' => $extendedProps
         ];
 
-        if (!$advisorSchedule->is_recurring) {
+        if ($advisorSchedule->is_recurring) {
+            $advisorScheduleFinal['recurrence'] = $recurrence;
+            $advisorScheduleFinal['extendedProps']['recurrenceType'] = $advisorSchedule->recurrence->freq;
+        } else {
             $start = $advisorSchedule->start_date.'T'.$advisorSchedule->start_time;
             $end = $advisorSchedule->end_date.'T'.$advisorSchedule->end_time;
 
@@ -86,6 +110,20 @@ class AdvisorScheduleController extends Controller
                     'recurrenceType' => ''
                 ];
 
+                $recurrence = [
+                    "startAt" => $row->recurrence->dtstart,
+                    "repeatTimes" => [
+                        "times" => $row->recurrence->interval,
+                        "type" => $row->recurrence->freq,
+                    ],
+                    "repeatDays" => json_decode($row->recurrence->byweekday),
+                    "finishAt" => [
+                        "type" => $row->recurrence->until,
+                        "value" => $row->recurrence->until
+                    ],
+                    "exdate" => $row->recurrence->exdate
+                ];
+
                 $event = [
                     'id' => $row->id,
                     'groupId' => $row->groupId,
@@ -96,7 +134,27 @@ class AdvisorScheduleController extends Controller
                     'extendedProps' => $extendedProps
                 ];
 
-                if (!$row->is_recurring) {
+                if ($row->is_recurring) {
+                    $event['recurrence'] = $recurrence;
+                    $event['duration'] = Carbon::parse($row->start_date.'T'.$row->start_time)->format('H:i');
+
+                    switch($row->recurrence->freq) {
+                        case 'weekly':
+                        case 'monthly':
+                        case 'yearly':
+                            $event['rrule'] = [
+                                "freq" => $row->recurrence->freq,
+                                "dtstart" => $row->recurrence->dtstart,
+                                "until" => $row->recurrence->until
+                            ];
+                            break;
+                            break;
+                        case 'daily':
+                            break;
+                        case 'personalized':
+                            break;
+                    }
+                } else {
                     $start = $row->start_date.'T'.$row->start_time;
                     $end = $row->end_date.'T'.$row->end_time;
 
