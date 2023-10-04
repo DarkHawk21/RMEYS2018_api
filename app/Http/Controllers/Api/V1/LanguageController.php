@@ -23,16 +23,42 @@ class LanguageController extends Controller
         DB::beginTransaction();
 
         try {
-            Language::truncate();
-
             $records = $request->input('records', []);
 
             foreach ($records as $record) {
-                Language::create(
+                switch(Str::slug($record['idioma'])) {
+                    case 'ingles':
+                        $bgColor = '#cf142b';
+                        $txColor = '#fff';
+                        break;
+                    case 'frances':
+                        $bgColor = '#002b7f';
+                        $txColor = '#fff';
+                        break;
+                    case 'aleman':
+                        $bgColor = '#ffce00';
+                        $txColor = '#000';
+                        break;
+                    case 'italiano':
+                        $bgColor = '#009846';
+                        $txColor = '#fff';
+                        break;
+                    case 'portugues':
+                        $bgColor = '#fff';
+                        $txColor = '#000';
+                        break;
+                }
+
+                Language::updateOrCreate(
+                    [
+                        'code' => Str::slug($record['idioma'])
+                    ],
                     [
                         'id' => $record['id'],
                         'code' => Str::slug($record['idioma']),
-                        'name' => $record['idioma']
+                        'name' => $record['idioma'],
+                        'bg_color' => $bgColor,
+                        'tx_color' => $txColor
                     ]
                 );
             }

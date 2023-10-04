@@ -17,6 +17,10 @@ class CreateLanguagesTable extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('name');
+            $table->string('bg_color')
+                ->nullable();
+            $table->string('tx_color')
+                ->nullable();
             $table->timestamps();
         });
     }

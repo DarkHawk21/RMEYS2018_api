@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\WorkshopController;
 use App\Http\Controllers\Api\V1\LanguageController;
+use App\Http\Controllers\Api\V1\AdvisorScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,12 @@ Route::prefix('v1')->group(function() {
         Route::post('me', [AuthController::class, 'me'])->name('me');
 
         // Resources
+        Route::get('schedule/{scheduleId}', [AdvisorScheduleController::class, 'getOne'])->name('advisor-one-schedule');
+
+        Route::get('advisors', [UserController::class, 'getAdvisors'])->name('advisors');
+        Route::get('advisors/{advisorId}', [UserController::class, 'getOne'])->name('advisor');
+        Route::get('advisors/{advisorId}/schedule', [AdvisorScheduleController::class, 'getAdvisorSchedule'])->name('advisor-schedule');
+
         Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
         Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');
         Route::get('total-on-languages', [LanguageController::class, 'getTotalRegisters'])->name('total-on-languages');

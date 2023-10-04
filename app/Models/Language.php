@@ -9,6 +9,8 @@ class Language extends Model
     protected $fillable = [
         'id',
         'code',
-        'name'
+        'name',
+        'bg_color',
+        'tx_color'
     ];
 }

@@ -22,4 +22,9 @@ class UserDetail extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
 }

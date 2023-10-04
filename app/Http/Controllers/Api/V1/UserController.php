@@ -13,12 +13,42 @@ use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
+    public function getOne($advisorId)
+    {
+        $roleAdvisor = UserRole::where('code', 'advisor')->first();
+
+        $advisor = User::with(['userDetail.language'])
+            ->where('id', $advisorId)
+            ->where('role_id', $roleAdvisor->id)
+            ->first();
+
+        $advisor = [
+            "id" => $advisor->id,
+            "name" => $advisor->userDetail->name,
+            "language" => $advisor->userDetail->language->name,
+            "img" => "profile.png"
+        ];
+
+        return response()->json($advisor);
+    }
+
+    public function getAdvisors()
+    {
+        $roleAdvisor = UserRole::where('code', 'advisor')->first();
+
+        $advisors = User::with(['userDetail'])
+            ->where('role_id', $roleAdvisor->id)
+            ->get();
+
+        return response()->json($advisors);
+    }
+
     public function getTotalRegisters(Request $request)
     {
-        $isAsesor = $request->input('social_service', 0);
+        $isSocialService = $request->input('social_service', 0);
 
-        $totalRegisters = User::whereHas('userDetail', function($query) use($isAsesor) {
-                $query->where('social_service', $isAsesor);
+        $totalRegisters = User::whereHas('userDetail', function($query) use($isSocialService) {
+                $query->where('social_service', $isSocialService);
             })
             ->count();
 
