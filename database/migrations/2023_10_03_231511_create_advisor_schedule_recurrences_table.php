@@ -18,33 +18,20 @@ class CreateAdvisorScheduleRecurrencesTable extends Migration
             $table->unsignedBigInteger('advisor_schedule_id');
             $table->string('exdate')
                 ->nullable();
+            $table->string('recurrence_type')
+                ->nullable();
+            $table->string('duration')
+                ->default('01:00')
+                ->nullable();
             $table->string('freq')
                 ->nullable();
             $table->dateTime('dtstart')
                 ->nullable();
             $table->integer('interval')
                 ->nullable();
-            $table->integer('count')
-                ->nullable();
             $table->dateTime('until')
                 ->nullable();
-            $table->string('bysetpos')
-                ->nullable();
-            $table->string('bymonth')
-                ->nullable();
-            $table->string('bymonthday')
-                ->nullable();
-            $table->string('byyearday')
-                ->nullable();
-            $table->string('byweekno')
-                ->nullable();
             $table->string('byweekday')
-                ->nullable();
-            $table->string('byhour')
-                ->nullable();
-            $table->string('byminute')
-                ->nullable();
-            $table->string('bysecond')
                 ->nullable();
             $table->timestamps();
 

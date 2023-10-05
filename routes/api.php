@@ -43,5 +43,7 @@ Route::prefix('v1')->group(function() {
         Route::post('sync-users', [UserController::class, 'syncRegisters'])->name('sync-users');
         Route::post('sync-workshops', [WorkshopController::class, 'syncRegisters'])->name('sync-workshops');
         Route::post('sync-languages', [LanguageController::class, 'syncRegisters'])->name('sync-languages');
+
+        Route::post('schedule', [AdvisorScheduleController::class, 'storeOne'])->name('store-one-schedule');
     });
 });

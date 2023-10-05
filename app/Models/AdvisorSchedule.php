@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdvisorSchedule extends Model
 {
+    protected $fillable = [
+        'groupId',
+        'user_id',
+        'title',
+        'start_date',
+        'end_date',
+        'start_time',
+        'end_time',
+        'is_recurring'
+    ];
+
     public function advisor()
     {
         return $this->belongsTo(
