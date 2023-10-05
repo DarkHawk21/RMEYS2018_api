@@ -45,5 +45,6 @@ Route::prefix('v1')->group(function() {
         Route::post('sync-languages', [LanguageController::class, 'syncRegisters'])->name('sync-languages');
 
         Route::post('schedule', [AdvisorScheduleController::class, 'storeOne'])->name('store-one-schedule');
+        Route::put('schedule/{scheduleId}', [AdvisorScheduleController::class, 'updateOne'])->name('update-one-schedule');
     });
 });
