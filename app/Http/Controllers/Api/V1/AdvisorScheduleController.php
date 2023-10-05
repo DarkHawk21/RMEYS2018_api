@@ -21,67 +21,9 @@ class AdvisorScheduleController extends Controller
             ])
             ->findOrFail($scheduleId);
 
-        $extendedProps = [
-            'timeStart' => [
-                'hours' => (int) Carbon::parse($advisorSchedule->start_date.'T'.$advisorSchedule->start_time)->format('h'),
-                'minutes' => 0
-            ],
-            'timeEnd' => [
-                'hours' => (int) Carbon::parse($advisorSchedule->end_date.'T'.$advisorSchedule->end_time)->format('h'),
-                'minutes' => 0
-            ],
-            'advisor' => [
-                'id' => $advisorSchedule->advisor->id,
-                'language' => $advisorSchedule->advisor->userDetail->language->name,
-                'img' => '',
-                'name' => $advisorSchedule->advisor->userDetail->name
-            ]
-        ];
+        $advisorSchedule = $this->formatEvent($advisorSchedule);
 
-        $recurrence = [
-            "startAt" => $advisorSchedule->recurrence->dtstart,
-            "repeatTimes" => [
-                "times" => $advisorSchedule->recurrence->interval,
-                "type" => $advisorSchedule->recurrence->freq,
-            ],
-            "repeatDays" => json_decode($advisorSchedule->recurrence->byweekday),
-            "finishAt" => [
-                "type" => $advisorSchedule->recurrence->until
-                    ? 'date'
-                    : ($advisorSchedule->recurrence->count
-                        ? 'times'
-                        : 'never'),
-                "value" => $advisorSchedule->recurrence->until
-                    ? $advisorSchedule->recurrence->until
-                    : ($advisorSchedule->recurrence->count
-                        ? $advisorSchedule->recurrence->count
-                        : 1)
-            ],
-            "exdate" => json_decode($advisorSchedule->recurrence->exdate)
-        ];
-
-        $advisorScheduleFinal = [
-            'id' => $advisorSchedule->id,
-            'groupId' => $advisorSchedule->groupId,
-            'title' => $advisorSchedule->title,
-            'backgroundColor' => $advisorSchedule->advisor->userDetail->language->bg_color,
-            'borderColor' => $advisorSchedule->advisor->userDetail->language->bg_color,
-            'textColor' => $advisorSchedule->advisor->userDetail->language->tx_color,
-            'extendedProps' => $extendedProps
-        ];
-
-        if ($advisorSchedule->is_recurring) {
-            $advisorScheduleFinal['recurrence'] = $recurrence;
-            $advisorScheduleFinal['extendedProps']['recurrenceType'] = $advisorSchedule->recurrence->freq;
-        } else {
-            $start = $advisorSchedule->start_date.'T'.$advisorSchedule->start_time;
-            $end = $advisorSchedule->end_date.'T'.$advisorSchedule->end_time;
-
-            $advisorScheduleFinal['start'] = $start;
-            $advisorScheduleFinal['end'] = $end;
-        }
-
-        return response()->json($advisorScheduleFinal);
+        return response()->json($advisorSchedule);
     }
 
     public function getAdvisorSchedule($advisorId)
@@ -94,84 +36,8 @@ class AdvisorScheduleController extends Controller
             ])
             ->where('user_id', $advisor->id)
             ->get()
-            ->map(function($row) {
-                $extendedProps = [
-                    'timeStart' => [
-                        'hours' => (int) Carbon::parse($row->start_date.'T'.$row->start_time)->format('h'),
-                        'minutes' => (int) Carbon::parse($row->start_date.'T'.$row->start_time)->format('i')
-                    ],
-                    'timeEnd' => [
-                        'hours' => (int) Carbon::parse($row->end_date.'T'.$row->end_time)->format('h'),
-                        'minutes' => (int) Carbon::parse($row->end_date.'T'.$row->end_time)->format('i')
-                    ],
-                    'advisor' => [
-                        'id' => $row->advisor->id,
-                        'language' => $row->advisor->userDetail->language->name,
-                        'img' => '',
-                        'name' => $row->advisor->userDetail->name
-                    ]
-                ];
-
-                $event = [
-                    'id' => $row->id,
-                    'groupId' => $row->groupId,
-                    'title' => $row->title,
-                    'backgroundColor' => $row->advisor->userDetail->language->bg_color,
-                    'borderColor' => $row->advisor->userDetail->language->bg_color,
-                    'textColor' => $row->advisor->userDetail->language->tx_color,
-                    'extendedProps' => $extendedProps
-                ];
-
-                $isRecurring = $row->is_recurring;
-
-                if (!$isRecurring) {
-                    $start = $row->start_date.'T'.$row->start_time;
-                    $end = $row->end_date.'T'.$row->end_time;
-                    $event['start'] = $start;
-                    $event['end'] = $end;
-                } else {
-                    $event['duration'] = $row->recurrence->duration;
-                    $recurrenceType = $row->recurrence->recurrence_type;
-                    $event['extendedProps']['recurrenceType'] = $recurrenceType;
-
-                    $event['extendedProps']['recurrence'] = [
-                        "startAt" => $row->recurrence->dtstart,
-                        "repeatTimes" => [
-                            "type" => $row->recurrence->freq,
-                            "times" => $row->recurrence->interval,
-                        ],
-                        "repeatDays" => json_decode($row->recurrence->byweekday),
-                        "finishAt" => [
-                            "type" => $row->recurrence->until
-                                ? 'date'
-                                : 'never',
-                            "value" => $row->recurrence->until
-                        ]
-                    ];
-
-                    if ($recurrenceType === 'personalized') {
-                        $event['rrule'] = [
-                            "freq" => $row->recurrence->freq,
-                            "dtstart" => $row->recurrence->dtstart,
-                            "until" => $row->recurrence->until,
-                            "interval" => $row->recurrence->interval,
-                            "byweekday" => json_decode($row->recurrence->byweekday),
-                        ];
-                    } else if ($recurrenceType === 'daily') {
-                        $event['rrule'] = [
-                            "freq" => $row->recurrence->freq,
-                            "dtstart" => $row->recurrence->dtstart,
-                            "byweekday" => json_decode($row->recurrence->byweekday)
-                        ];
-                    } else {
-                        $event['rrule'] = [
-                            "freq" => $row->recurrence->freq,
-                            "dtstart" => $row->recurrence->dtstart,
-                        ];
-                    }
-                }
-
-                return $event;
+            ->map(function($event) {
+                return $this->formatEvent($event);
             });
 
         return response()->json($advisorSchedule);
@@ -222,11 +88,18 @@ class AdvisorScheduleController extends Controller
                     }
                 }
 
+                $exdateArray = $request->input('exdate');
+                $exdateArrayFinal = [];
+
+                foreach ($exdateArray as $exdate) {
+                    $exdateArrayFinal[] = Carbon::parse($exdate)->format('Y-m-d').' '.Carbon::parse($exdate)->format('H:i:s');
+                }
+
                 AdvisorScheduleRecurrence::create(
                     [
                         'advisor_schedule_id' => $newAdvisorSchedule->id,
                         'recurrence_type' => $recurrenceType,
-                        'exdate' => $request->input('extendedProps.recurrence.exdate'),
+                        'exdate' => json_encode($exdateArrayFinal),
                         'freq' => $freq,
                         'dtstart' => Carbon::parse($date)->format('Y-m-d').' '.Carbon::parse($timeStart['hours'].':'.$timeStart['minutes'].':00')->format('H:i:s'),
                         'duration' => $duration.':00:00',
@@ -253,5 +126,102 @@ class AdvisorScheduleController extends Controller
                 "message" => 'Ocurrió un error al intentar crear el registro.'
             ], 500);
         }
+    }
+
+    public function formatEvent($eventToFormat)
+    {
+        $extendedProps = [
+            'timeStart' => [
+                'hours' => (int) Carbon::parse($eventToFormat->start_date.'T'.$eventToFormat->start_time)->format('h'),
+                'minutes' => (int) Carbon::parse($eventToFormat->start_date.'T'.$eventToFormat->start_time)->format('i')
+            ],
+            'timeEnd' => [
+                'hours' => (int) Carbon::parse($eventToFormat->end_date.'T'.$eventToFormat->end_time)->format('h'),
+                'minutes' => (int) Carbon::parse($eventToFormat->end_date.'T'.$eventToFormat->end_time)->format('i')
+            ],
+            'advisor' => [
+                'id' => $eventToFormat->advisor->id,
+                'language' => $eventToFormat->advisor->userDetail->language->name,
+                'img' => '',
+                'name' => $eventToFormat->advisor->userDetail->name
+            ]
+        ];
+
+        $event = [
+            'id' => $eventToFormat->id,
+            'groupId' => $eventToFormat->groupId,
+            'title' => $eventToFormat->title,
+            'backgroundColor' => $eventToFormat->advisor->userDetail->language->bg_color,
+            'borderColor' => $eventToFormat->advisor->userDetail->language->bg_color,
+            'textColor' => $eventToFormat->advisor->userDetail->language->tx_color,
+            'extendedProps' => $extendedProps
+        ];
+
+        $isRecurring = $eventToFormat->is_recurring;
+
+        if (!$isRecurring) {
+            $event['extendedProps']['recurrenceType'] = 'never';
+            $start = $eventToFormat->start_date.'T'.$eventToFormat->start_time;
+            $end = $eventToFormat->end_date.'T'.$eventToFormat->end_time;
+            $event['start'] = $start;
+            $event['end'] = $end;
+            $event['exdate'] = NULL;
+
+            $event['extendedProps']['recurrence'] = [
+                "startAt" => '',
+                "repeatTimes" => [
+                    "type" => 1,
+                    "times" => "weekly",
+                ],
+                "repeatDays" => [],
+                "finishAt" => [
+                    "type" => 'never',
+                    "value" => ''
+                ]
+            ];
+        } else {
+            $event['duration'] = $eventToFormat->recurrence->duration;
+            $recurrenceType = $eventToFormat->recurrence->recurrence_type;
+            $event['extendedProps']['recurrenceType'] = $recurrenceType;
+            $event['exdate'] = json_decode($eventToFormat->recurrence->exdate);
+
+            $event['extendedProps']['recurrence'] = [
+                "startAt" => $eventToFormat->recurrence->dtstart,
+                "repeatTimes" => [
+                    "type" => $eventToFormat->recurrence->freq,
+                    "times" => $eventToFormat->recurrence->interval,
+                ],
+                "repeatDays" => json_decode($eventToFormat->recurrence->byweekday),
+                "finishAt" => [
+                    "type" => $eventToFormat->recurrence->until
+                        ? 'date'
+                        : 'never',
+                    "value" => $eventToFormat->recurrence->until
+                ]
+            ];
+
+            if ($recurrenceType === 'personalized') {
+                $event['rrule'] = [
+                    "freq" => $eventToFormat->recurrence->freq,
+                    "dtstart" => $eventToFormat->recurrence->dtstart,
+                    "until" => $eventToFormat->recurrence->until,
+                    "interval" => $eventToFormat->recurrence->interval,
+                    "byweekday" => json_decode($eventToFormat->recurrence->byweekday),
+                ];
+            } else if ($recurrenceType === 'daily') {
+                $event['rrule'] = [
+                    "freq" => $eventToFormat->recurrence->freq,
+                    "dtstart" => $eventToFormat->recurrence->dtstart,
+                    "byweekday" => json_decode($eventToFormat->recurrence->byweekday)
+                ];
+            } else {
+                $event['rrule'] = [
+                    "freq" => $eventToFormat->recurrence->freq,
+                    "dtstart" => $eventToFormat->recurrence->dtstart,
+                ];
+            }
+        }
+
+        return $event;
     }
 }

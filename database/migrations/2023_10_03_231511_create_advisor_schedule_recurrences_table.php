@@ -16,7 +16,7 @@ class CreateAdvisorScheduleRecurrencesTable extends Migration
         Schema::create('advisor_schedule_recurrences', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('advisor_schedule_id');
-            $table->string('exdate')
+            $table->text('exdate')
                 ->nullable();
             $table->string('recurrence_type')
                 ->nullable();
