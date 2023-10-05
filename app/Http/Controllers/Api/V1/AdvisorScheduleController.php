@@ -243,15 +243,46 @@ class AdvisorScheduleController extends Controller
         }
     }
 
+    public function deleteOne($scheduleId)
+    {
+        DB::beginTransaction();
+
+        try {
+            $advisorSchedule = AdvisorSchedule::findOrFail($scheduleId);
+
+            if ($advisorSchedule->recurrence) {
+                $advisorSchedule->recurrence()->delete();
+            }
+
+            $advisorSchedule->delete();
+
+            DB::commit();
+
+            return response()->json([
+                "error" => NULL,
+                "message" => 'Registro actualizado correctamente.',
+            ]);
+        } catch(\Exception $e) {
+            Log::info($e);
+
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e->getMessage(),
+                "message" => 'Ocurrió un error al intentar actualizar el registro.'
+            ], 500);
+        }
+    }
+
     public function formatEvent($eventToFormat)
     {
         $extendedProps = [
             'timeStart' => [
-                'hours' => (int) Carbon::parse($eventToFormat->start_date.'T'.$eventToFormat->start_time)->format('h'),
+                'hours' => (int) Carbon::parse($eventToFormat->start_date.'T'.$eventToFormat->start_time)->format('H'),
                 'minutes' => (int) Carbon::parse($eventToFormat->start_date.'T'.$eventToFormat->start_time)->format('i')
             ],
             'timeEnd' => [
-                'hours' => (int) Carbon::parse($eventToFormat->end_date.'T'.$eventToFormat->end_time)->format('h'),
+                'hours' => (int) Carbon::parse($eventToFormat->end_date.'T'.$eventToFormat->end_time)->format('H'),
                 'minutes' => (int) Carbon::parse($eventToFormat->end_date.'T'.$eventToFormat->end_time)->format('i')
             ],
             'advisor' => [

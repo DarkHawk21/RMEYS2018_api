@@ -46,5 +46,6 @@ Route::prefix('v1')->group(function() {
 
         Route::post('schedule', [AdvisorScheduleController::class, 'storeOne'])->name('store-one-schedule');
         Route::put('schedule/{scheduleId}', [AdvisorScheduleController::class, 'updateOne'])->name('update-one-schedule');
+        Route::delete('schedule/{scheduleId}', [AdvisorScheduleController::class, 'deleteOne'])->name('delete-one-schedule');
     });
 });
