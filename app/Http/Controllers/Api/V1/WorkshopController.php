@@ -12,6 +12,26 @@ use App\Http\Controllers\Controller;
 
 class WorkshopController extends Controller
 {
+    public function getWorkshopsByAdvisor($advisorId)
+    {
+        $workshopsByAdvisor = Workshop::where('user_id', $advisorId)
+            ->get()
+            ->map(function($workshop) {
+                $workshop = [
+                    "id" => $workshop->id,
+                    "title" => $workshop->title,
+                    "start" => $workshop->start,
+                    "end" => $workshop->end,
+                    "color" => 'gray',
+                    "textColor" => 'white'
+                ];
+
+                return $workshop;
+            });
+
+        return response()->json($workshopsByAdvisor);
+    }
+
     public function getTotalRegisters()
     {
         $totalRegisters = Workshop::count();

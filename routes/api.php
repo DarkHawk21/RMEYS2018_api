@@ -19,33 +19,36 @@ use App\Http\Controllers\Api\V1\AdvisorScheduleController;
 */
 
 Route::prefix('v1')->group(function() {
-    // Credentials
-    Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::group(['middleware' => ['cors']], function() {
+        // Credentials
+        Route::post('login', [AuthController::class, 'login'])->name('login');
+        Route::post('register', [AuthController::class, 'register'])->name('register');
 
-    Route::group(['middleware' => ['auth:api']], function() {
-        // Auth
-        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-        Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
-        Route::post('me', [AuthController::class, 'me'])->name('me');
+        Route::group(['middleware' => ['auth:api']], function() {
+            // Auth
+            Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+            Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
+            Route::post('me', [AuthController::class, 'me'])->name('me');
 
-        // Resources
-        Route::get('schedule/{scheduleId}', [AdvisorScheduleController::class, 'getOne'])->name('advisor-one-schedule');
+            // Resources
+            Route::get('advisors', [UserController::class, 'getAdvisors'])->name('advisors');
+            Route::get('advisors/{advisorId}', [UserController::class, 'getOne'])->name('advisor');
+            Route::get('advisors/{advisorId}/schedule', [AdvisorScheduleController::class, 'getAdvisorSchedule'])->name('advisor-schedule');
+            Route::get('advisors/{advisorId}/workshops', [WorkshopController::class, 'getWorkshopsByAdvisor'])->name('workshops');
 
-        Route::get('advisors', [UserController::class, 'getAdvisors'])->name('advisors');
-        Route::get('advisors/{advisorId}', [UserController::class, 'getOne'])->name('advisor');
-        Route::get('advisors/{advisorId}/schedule', [AdvisorScheduleController::class, 'getAdvisorSchedule'])->name('advisor-schedule');
+            Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
+            Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');
+            Route::get('total-on-languages', [LanguageController::class, 'getTotalRegisters'])->name('total-on-languages');
 
-        Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
-        Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');
-        Route::get('total-on-languages', [LanguageController::class, 'getTotalRegisters'])->name('total-on-languages');
+            Route::get('schedule/{scheduleId}', [AdvisorScheduleController::class, 'getOne'])->name('advisor-one-schedule');
+            Route::post('schedule', [AdvisorScheduleController::class, 'storeOne'])->name('store-one-schedule');
+            Route::put('schedule/{scheduleId}', [AdvisorScheduleController::class, 'updateOne'])->name('update-one-schedule');
+            Route::delete('schedule/{scheduleId}', [AdvisorScheduleController::class, 'deleteOne'])->name('delete-one-schedule');
 
-        Route::post('sync-users', [UserController::class, 'syncRegisters'])->name('sync-users');
-        Route::post('sync-workshops', [WorkshopController::class, 'syncRegisters'])->name('sync-workshops');
-        Route::post('sync-languages', [LanguageController::class, 'syncRegisters'])->name('sync-languages');
-
-        Route::post('schedule', [AdvisorScheduleController::class, 'storeOne'])->name('store-one-schedule');
-        Route::put('schedule/{scheduleId}', [AdvisorScheduleController::class, 'updateOne'])->name('update-one-schedule');
-        Route::delete('schedule/{scheduleId}', [AdvisorScheduleController::class, 'deleteOne'])->name('delete-one-schedule');
+            // Sync
+            Route::post('sync-users', [UserController::class, 'syncRegisters'])->name('sync-users');
+            Route::post('sync-workshops', [WorkshopController::class, 'syncRegisters'])->name('sync-workshops');
+            Route::post('sync-languages', [LanguageController::class, 'syncRegisters'])->name('sync-languages');
+        });
     });
 });
