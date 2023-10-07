@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\WorkshopController;
 use App\Http\Controllers\Api\V1\LanguageController;
 use App\Http\Controllers\Api\V1\AdvisorScheduleController;
+use App\Http\Controllers\Api\V1\AdvisoryController;
 use App\Http\Controllers\Api\V1\StudentController;
 
 /*
@@ -41,6 +42,8 @@ Route::prefix('v1')->group(function() {
             Route::get('students/{studentAccount}', [StudentController::class, 'getOne'])->name('student');
 
             Route::get('workshops', [WorkshopController::class, 'getWorkshops'])->name('workshops');
+
+            Route::post('advisories', [AdvisoryController::class, 'storeOne'])->name('store-one-advisory');
 
             Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
             Route::get('total-on-students', [StudentController::class, 'getTotalRegisters'])->name('total-on-students');
