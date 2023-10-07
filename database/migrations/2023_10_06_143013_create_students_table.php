@@ -17,11 +17,15 @@ class CreateStudentsTable extends Migration
             $table->id();
             $table->string('ncuenta')
                 ->unique();
-            $table->string('appat');
-            $table->string('apmat');
+            $table->string('appat')
+                ->nullable();
+            $table->string('apmat')
+                ->nullable();
             $table->string('nombre');
-            $table->string('grupo');
-            $table->string('turno');
+            $table->string('grupo')
+                ->nullable();
+            $table->string('turno')
+                ->nullable();
             $table->timestamps();
         });
     }

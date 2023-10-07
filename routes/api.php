@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\WorkshopController;
 use App\Http\Controllers\Api\V1\LanguageController;
 use App\Http\Controllers\Api\V1\AdvisorScheduleController;
+use App\Http\Controllers\Api\V1\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,7 @@ Route::prefix('v1')->group(function() {
             Route::get('workshops', [WorkshopController::class, 'getWorkshops'])->name('workshops');
 
             Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
+            Route::get('total-on-students', [StudentController::class, 'getTotalRegisters'])->name('total-on-students');
             Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');
             Route::get('total-on-languages', [LanguageController::class, 'getTotalRegisters'])->name('total-on-languages');
 
@@ -50,6 +52,7 @@ Route::prefix('v1')->group(function() {
 
             // Sync
             Route::post('sync-users', [UserController::class, 'syncRegisters'])->name('sync-users');
+            Route::post('sync-students', [StudentController::class, 'syncRegisters'])->name('sync-students');
             Route::post('sync-workshops', [WorkshopController::class, 'syncRegisters'])->name('sync-workshops');
             Route::post('sync-languages', [LanguageController::class, 'syncRegisters'])->name('sync-languages');
         });
