@@ -10,6 +10,14 @@ use App\Http\Controllers\Controller;
 
 class StudentController extends Controller
 {
+    public function getOne($studentAccount)
+    {
+        $student = Student::where('ncuenta', $studentAccount)
+            ->first();
+
+        return response()->json($student);
+    }
+
     public function getTotalRegisters()
     {
         $totalRegisters = Student::count();

@@ -38,6 +38,8 @@ Route::prefix('v1')->group(function() {
             Route::get('advisors/{advisorId}/schedule', [AdvisorScheduleController::class, 'getAdvisorSchedule'])->name('advisor-schedule');
             Route::get('advisors/{advisorId}/workshops', [WorkshopController::class, 'getWorkshopsByAdvisor'])->name('workshops-by-advisor');
 
+            Route::get('students/{studentAccount}', [StudentController::class, 'getOne'])->name('student');
+
             Route::get('workshops', [WorkshopController::class, 'getWorkshops'])->name('workshops');
 
             Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
