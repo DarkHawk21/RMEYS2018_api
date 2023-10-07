@@ -37,7 +37,9 @@ class CreateAdvisorScheduleRecurrencesTable extends Migration
 
             $table->foreign('advisor_schedule_id')
                 ->references('id')
-                ->on('advisor_schedules');
+                ->on('advisor_schedules')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

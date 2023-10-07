@@ -28,11 +28,15 @@ class CreateWorkshopsTable extends Migration
 
             $table->foreign('user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
             $table->foreign('language_id')
                 ->references('id')
-                ->on('languages');
+                ->on('languages')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
