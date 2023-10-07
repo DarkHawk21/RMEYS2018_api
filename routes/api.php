@@ -32,9 +32,12 @@ Route::prefix('v1')->group(function() {
 
             // Resources
             Route::get('advisors', [UserController::class, 'getAdvisors'])->name('advisors');
+            Route::get('advisors/schedule', [AdvisorScheduleController::class, 'getAdvisorsSchedule'])->name('advisors-schedule');
             Route::get('advisors/{advisorId}', [UserController::class, 'getOne'])->name('advisor');
             Route::get('advisors/{advisorId}/schedule', [AdvisorScheduleController::class, 'getAdvisorSchedule'])->name('advisor-schedule');
-            Route::get('advisors/{advisorId}/workshops', [WorkshopController::class, 'getWorkshopsByAdvisor'])->name('workshops');
+            Route::get('advisors/{advisorId}/workshops', [WorkshopController::class, 'getWorkshopsByAdvisor'])->name('workshops-by-advisor');
+
+            Route::get('workshops', [WorkshopController::class, 'getWorkshops'])->name('workshops');
 
             Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
             Route::get('total-on-workshops', [WorkshopController::class, 'getTotalRegisters'])->name('total-on-workshops');

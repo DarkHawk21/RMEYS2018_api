@@ -43,6 +43,20 @@ class AdvisorScheduleController extends Controller
         return response()->json($advisorSchedule);
     }
 
+    public function getAdvisorsSchedule()
+    {
+        $advisorsSchedule = AdvisorSchedule::with([
+                'recurrence',
+                'advisor.userDetail.language'
+            ])
+            ->get()
+            ->map(function($event) {
+                return $this->formatEvent($event);
+            });
+
+        return response()->json($advisorsSchedule);
+    }
+
     public function storeOne(Request $request)
     {
         DB::beginTransaction();
