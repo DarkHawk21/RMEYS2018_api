@@ -23,7 +23,8 @@ class WorkshopController extends Controller
                     "end" => $workshop->end,
                     "color" => 'gray',
                     "textColor" => 'white',
-                    "userId" => $workshop->user_id
+                    "userId" => $workshop->user_id,
+                    "type" => 'workshop'
                 ];
 
                 return $workshop;
@@ -43,7 +44,9 @@ class WorkshopController extends Controller
                     "start" => $workshop->start,
                     "end" => $workshop->end,
                     "color" => 'gray',
-                    "textColor" => 'white'
+                    "textColor" => 'white',
+                    "userId" => $workshop->user_id,
+                    "type" => 'workshop'
                 ];
 
                 return $workshop;

@@ -44,6 +44,14 @@ Route::prefix('v1')->group(function() {
             Route::get('workshops', [WorkshopController::class, 'getWorkshops'])->name('workshops');
 
             Route::post('advisories', [AdvisoryController::class, 'storeOne'])->name('store-one-advisory');
+            Route::get(
+                'advisories/{scheduleEventId}/{selectedDate}/{selectedTimeStart}/disponibility',
+                [AdvisoryController::class, 'getOneDisponibility'])->name('advisories-get-one-disponibility'
+            );
+            Route::get(
+                'advisories/{scheduleEventId}/{selectedDate}/{selectedTimeStart}/disponibility/{studentAccount}',
+                [AdvisoryController::class, 'getOneDisponibilityByStudent'])->name('advisories-get-one-disponibility-by-student'
+            );
 
             Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
             Route::get('total-on-students', [StudentController::class, 'getTotalRegisters'])->name('total-on-students');

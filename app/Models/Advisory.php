@@ -17,4 +17,9 @@ class Advisory extends Model
         'real_time_start',
         'real_time_end',
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id', 'id');
+    }
 }

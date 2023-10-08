@@ -52,4 +52,31 @@ class AdvisoryController extends Controller
             ], 500);
         }
     }
+
+    public function getOneDisponibility($scheduleEventId, $selectedDate, $selectedTimeStart)
+    {
+        $maximumQuota = 5;
+
+        $coincidentAdvisories = Advisory::where('schedule_event_id', $scheduleEventId)
+            ->where('selected_date', $selectedDate)
+            ->where('selected_time_start', $selectedTimeStart)
+            ->count();
+
+        $availableQuota = $maximumQuota - $coincidentAdvisories;
+
+        return response()->json($availableQuota);
+    }
+
+    public function getOneDisponibilityByStudent($scheduleEventId, $selectedDate, $selectedTimeStart, $studentAccount)
+    {
+        $coincidentAdvisory = Advisory::where('schedule_event_id', $scheduleEventId)
+            ->where('selected_date', $selectedDate)
+            ->where('selected_time_start', $selectedTimeStart)
+            ->whereHas('student', function($query) use($studentAccount) {
+                $query->where('ncuenta', $studentAccount);
+            })
+            ->first();
+
+        return response()->json($coincidentAdvisory);
+    }
 }
