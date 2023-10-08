@@ -18,10 +18,10 @@ class WorkshopController extends Controller
             ->map(function($workshop) {
                 $workshop = [
                     "id" => $workshop->id,
-                    "title" => $workshop->title,
+                    "title" => "Taller ".$workshop->advisor->userDetail->name,
                     "start" => $workshop->start,
                     "end" => $workshop->end,
-                    "color" => 'gray',
+                    "color" => 'rgb(130,130,130)',
                     "textColor" => 'white',
                     "userId" => $workshop->user_id,
                     "type" => 'workshop'

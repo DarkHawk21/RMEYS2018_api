@@ -17,4 +17,9 @@ class Workshop extends Model
     ];
 
     public $timestamps = false;
+
+    public function advisor()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }
