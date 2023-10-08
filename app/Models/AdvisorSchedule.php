@@ -34,4 +34,9 @@ class AdvisorSchedule extends Model
             'id'
         );
     }
+
+    public function advisories()
+    {
+        return $this->hasMany(Advisory::class, 'schedule_event_id', 'id');
+    }
 }

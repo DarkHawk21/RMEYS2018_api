@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\AdvisorSchedule;
 use App\Http\Controllers\Controller;
 use App\Models\AdvisorScheduleRecurrence;
+use App\Models\Advisory;
 
 class AdvisorScheduleController extends Controller
 {
@@ -387,5 +388,16 @@ class AdvisorScheduleController extends Controller
         }
 
         return $event;
+    }
+
+    public function getAdvisorAdvisories($advisorId)
+    {
+        $advisorAdvisories = Advisory::with(['student'])
+            ->whereHas('scheduleEvent.advisor', function($query) use($advisorId) {
+                $query->where('id', $advisorId);
+            })
+            ->get();
+
+        return response()->json($advisorAdvisories);
     }
 }

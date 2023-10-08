@@ -22,4 +22,9 @@ class Advisory extends Model
     {
         return $this->belongsTo(Student::class, 'student_id', 'id');
     }
+
+    public function scheduleEvent()
+    {
+        return $this->belongsTo(AdvisorSchedule::class, 'schedule_event_id', 'id');
+    }
 }
