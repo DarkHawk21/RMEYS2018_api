@@ -44,6 +44,7 @@ Route::prefix('v1')->group(function() {
             Route::get('workshops', [WorkshopController::class, 'getWorkshops'])->name('workshops');
 
             Route::post('advisories', [AdvisoryController::class, 'storeOne'])->name('store-one-advisory');
+            Route::post('advisories/checkin', [AdvisoryController::class, 'checkin'])->name('checkin-on-advisory');
             Route::get(
                 'advisories/{scheduleEventId}/{selectedDate}/{selectedTimeStart}/disponibility',
                 [AdvisoryController::class, 'getOneDisponibility'])->name('advisories-get-one-disponibility'
@@ -51,6 +52,10 @@ Route::prefix('v1')->group(function() {
             Route::get(
                 'advisories/{scheduleEventId}/{selectedDate}/{selectedTimeStart}/disponibility/{studentAccount}',
                 [AdvisoryController::class, 'getOneDisponibilityByStudent'])->name('advisories-get-one-disponibility-by-student'
+            );
+            Route::get(
+                'advisories/{scheduleEventId}/{selectedDate}/{selectedTimeStart}/checkin/{studentAccount}',
+                [AdvisoryController::class, 'getOneCheckInByStudent'])->name('advisories-get-one-checkin-by-student'
             );
 
             Route::get('total-on-users', [UserController::class, 'getTotalRegisters'])->name('total-on-users');
