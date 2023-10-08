@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use DB;
 use Log;
+use Carbon\Carbon;
 use App\Models\Student;
+use App\Models\Advisory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -57,5 +59,19 @@ class StudentController extends Controller
                 "message" => 'Ocurrió un error al intentar sincronizar la tabla.'
             ], 500);
         }
+    }
+
+    public function getLastCheckin($studentAccount)
+    {
+        $lastCheckIn = Advisory::with(['student', 'scheduleEvent.advisor.userDetail.language'])
+            ->whereHas('student', function($query) use($studentAccount) {
+                $query->where('ncuenta', $studentAccount);
+            })
+            ->whereDate('selected_date', Carbon::now('GMT-6')->format('Y-m-d'))
+            ->whereTime('selected_time_start', '<=', Carbon::now('GMT-6')->format('H:i:s'))
+            ->whereNull('real_time_end')
+            ->first();
+
+        return response()->json($lastCheckIn);
     }
 }

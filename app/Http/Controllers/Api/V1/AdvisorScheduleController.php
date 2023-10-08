@@ -396,6 +396,7 @@ class AdvisorScheduleController extends Controller
             ->whereHas('scheduleEvent.advisor', function($query) use($advisorId) {
                 $query->where('id', $advisorId);
             })
+            ->whereDate('selected_date', '>=', Carbon::now('GMT-6')->format('Y-m-d'))
             ->get();
 
         return response()->json($advisorAdvisories);

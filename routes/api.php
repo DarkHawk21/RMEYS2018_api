@@ -41,6 +41,7 @@ Route::prefix('v1')->group(function() {
             Route::get('advisors/{advisorId}/advisories', [AdvisorScheduleController::class, 'getAdvisorAdvisories'])->name('advisor-advisories');
 
             Route::get('students/{studentAccount}', [StudentController::class, 'getOne'])->name('student');
+            Route::get('students/{studentAccount}/lastCheckIn', [StudentController::class, 'getLastCheckin'])->name('students-get-last-checkin');
 
             Route::get('workshops', [WorkshopController::class, 'getWorkshops'])->name('workshops');
 
