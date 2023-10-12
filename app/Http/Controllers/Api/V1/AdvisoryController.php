@@ -21,7 +21,7 @@ class AdvisoryController extends Controller
             $student = Student::where('ncuenta', $studentAccount)
                 ->firstOrFail();
             $scheduleEventId = $request->input('event.id');
-            $selectedDate = $request->input('event.date');
+            $selectedDate = $request->input('event.start');
             $selectedTimeStart = $request->input('selectedHour.timeStart');
             $selectedTimeEnd = $request->input('selectedHour.timeEnd');
 
