@@ -21,7 +21,7 @@ class JwtMiddlware
     {
         try {
             $headers = apache_request_headers();
-            $request->headers->set('Authorization', $headers['authorization']);
+            $request->headers->set('Authorization', $headers['Authorization']);
 
             $user = JWTAuth::parseToken()->authenticate();
         } catch (Exception $e) {
