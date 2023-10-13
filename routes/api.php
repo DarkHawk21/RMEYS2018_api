@@ -27,7 +27,6 @@ Route::prefix('v1')->group(function() {
         Route::post('register', [AuthController::class, 'register'])->name('register');
 
         Route::group(['middleware' => ['jwt.auth']], function() {
-            \Log::debug("Entraste");
             // Auth
             Route::post('logout', [AuthController::class, 'logout'])->name('logout');
             Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
