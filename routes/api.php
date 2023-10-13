@@ -26,7 +26,7 @@ Route::prefix('v1')->group(function() {
         Route::post('login', [AuthController::class, 'login'])->name('login');
         Route::post('register', [AuthController::class, 'register'])->name('register');
 
-        Route::group(['middleware' => ['jwt.auth']], function() {
+        Route::group(['middleware' => ['jwt.verify']], function() {
             // Auth
             Route::post('logout', [AuthController::class, 'logout'])->name('logout');
             Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
