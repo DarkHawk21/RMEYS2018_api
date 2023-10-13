@@ -20,6 +20,9 @@ class JwtMiddlware
     public function handle(Request $request, Closure $next)
     {
         try {
+            $headers = apache_request_headers();
+            $request->headers->set('Authorization', $headers['authorization']);
+
             $user = JWTAuth::parseToken()->authenticate();
         } catch (Exception $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
