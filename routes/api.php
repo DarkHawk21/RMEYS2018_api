@@ -35,6 +35,7 @@ Route::prefix('v1')->group(function() {
             // Resources
             Route::get('advisors', [UserController::class, 'getAdvisors'])->name('advisors');
             Route::get('advisors/schedule', [AdvisorScheduleController::class, 'getAdvisorsSchedule'])->name('advisors-schedule');
+            Route::get('advisors/advisories', [AdvisorScheduleController::class, 'getAdvisorsAdvisories'])->name('advisors-advisories');
             Route::get('advisors/{advisorId}', [UserController::class, 'getOne'])->name('advisor');
             Route::get('advisors/{advisorId}/schedule', [AdvisorScheduleController::class, 'getAdvisorSchedule'])->name('advisor-schedule');
             Route::get('advisors/{advisorId}/workshops', [WorkshopController::class, 'getWorkshopsByAdvisor'])->name('workshops-by-advisor');

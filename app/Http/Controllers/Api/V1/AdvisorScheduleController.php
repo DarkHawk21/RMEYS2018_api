@@ -401,4 +401,13 @@ class AdvisorScheduleController extends Controller
 
         return response()->json($advisorAdvisories);
     }
+
+    public function getAdvisorsAdvisories()
+    {
+        $advisorsAdvisories = Advisory::with(['student', 'scheduleEvent.advisor'])
+            ->whereDate('selected_date', '>=', Carbon::now('GMT-6')->format('Y-m-d'))
+            ->get();
+
+        return response()->json($advisorsAdvisories);
+    }
 }
