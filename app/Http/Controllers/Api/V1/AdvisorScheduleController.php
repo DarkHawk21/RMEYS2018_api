@@ -89,7 +89,18 @@ class AdvisorScheduleController extends Controller
                 $interval = NULL;
                 $byweekday = [];
                 $freq = $recurrenceType;
-                $duration = $timeEnd['hours'] - $timeStart['hours'];
+                $hoursElapsed = $timeEnd['hours'] - $timeStart['hours'];
+                $minutesElapsed = $timeEnd['minutes'] - $timeStart['minutes'];
+
+                $durationHours = $hoursElapsed >= 10
+                    ? $hoursElapsed
+                    : '0'.$hoursElapsed;
+
+                $durationMinutes = $minutesElapsed >= 10
+                    ? $minutesElapsed
+                    : '0'.$minutesElapsed;
+
+                $duration = $durationHours.':'.$durationMinutes.':00';
 
                 if ($recurrenceType === 'daily') {
                     $byweekday = ['mo', 'tu', 'we', 'th', 'fr'];
@@ -126,7 +137,7 @@ class AdvisorScheduleController extends Controller
                         'exdate' => json_encode($exdateArrayFinal),
                         'freq' => $freq,
                         'dtstart' => Carbon::parse($date)->format('Y-m-d').' '.Carbon::parse($timeStart['hours'].':'.$timeStart['minutes'].':00')->format('H:i:s'),
-                        'duration' => $duration.':00:00',
+                        'duration' => $duration,
                         'byweekday' => $byweekday,
                         'interval' => $interval,
                         'until' => $until
@@ -187,7 +198,18 @@ class AdvisorScheduleController extends Controller
                 $interval = NULL;
                 $byweekday = [];
                 $freq = $recurrenceType;
-                $duration = $timeEnd['hours'] - $timeStart['hours'];
+                $hoursElapsed = $timeEnd['hours'] - $timeStart['hours'];
+                $minutesElapsed = $timeEnd['minutes'] - $timeStart['minutes'];
+
+                $durationHours = $hoursElapsed >= 10
+                    ? $hoursElapsed
+                    : '0'.$hoursElapsed;
+
+                $durationMinutes = $minutesElapsed >= 10
+                    ? $minutesElapsed
+                    : '0'.$minutesElapsed;
+
+                $duration = $durationHours.':'.$durationMinutes.':00';
 
                 if ($recurrenceType === 'daily') {
                     $byweekday = ['mo', 'tu', 'we', 'th', 'fr'];
@@ -227,7 +249,7 @@ class AdvisorScheduleController extends Controller
                         'exdate' => json_encode($exdateArrayFinal),
                         'freq' => $freq,
                         'dtstart' => Carbon::parse($date)->format('Y-m-d').' '.Carbon::parse($timeStart['hours'].':'.$timeStart['minutes'].':00')->format('H:i:s'),
-                        'duration' => $duration.':00:00',
+                        'duration' => $duration,
                         'byweekday' => $byweekday,
                         'interval' => $interval,
                         'until' => $until
@@ -303,7 +325,7 @@ class AdvisorScheduleController extends Controller
             'advisor' => [
                 'id' => $eventToFormat->advisor->id,
                 'language' => $eventToFormat->advisor->userDetail->language->name,
-                'img' => '',
+                'img' => $eventToFormat->advisor->userDetail->img,
                 'name' => $eventToFormat->advisor->userDetail->name
             ]
         ];

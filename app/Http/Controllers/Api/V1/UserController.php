@@ -26,7 +26,7 @@ class UserController extends Controller
             "id" => $advisor->id,
             "name" => $advisor->userDetail->name,
             "language" => $advisor->userDetail->language->name,
-            "img" => "profile.png"
+            "img" => $advisor->userDetail->img
         ];
 
         return response()->json($advisor);

@@ -19,6 +19,7 @@ class WorkshopController extends Controller
                 $workshop = [
                     "id" => $workshop->id,
                     "title" => "Taller ".$workshop->advisor->userDetail->name,
+                    "workshop_name" => $workshop->title,
                     "start" => $workshop->start,
                     "end" => $workshop->end,
                     "color" => 'rgb(130,130,130)',

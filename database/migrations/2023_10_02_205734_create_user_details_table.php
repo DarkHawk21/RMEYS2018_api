@@ -25,6 +25,8 @@ class CreateUserDetailsTable extends Migration
             $table->integer('social_service')
                 ->default(0);
             $table->unsignedBigInteger('language_id');
+            $table->string('img')
+                ->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

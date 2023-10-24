@@ -13,6 +13,7 @@ class UserDetail extends Model
         'name',
         'cellphone',
         'social_service',
+        'img',
         'language_id',
         'created_at',
         'updated_at',
