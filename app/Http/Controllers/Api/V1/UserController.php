@@ -96,6 +96,7 @@ class UserController extends Controller
                             'social_service' => isset($record['id'])
                                 ? 1
                                 : 0,
+                            'img' => '',
                             'language_id' => Language::where('name', $record['idioma'])
                                 ->first()
                                 ->id
