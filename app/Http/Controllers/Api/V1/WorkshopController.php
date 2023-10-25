@@ -93,6 +93,8 @@ class WorkshopController extends Controller
                             ->id,
                     ]
                 );
+                Log::debug("Se creó taller:");
+                Log::debug($record);
             }
 
             DB::commit();

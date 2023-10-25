@@ -97,6 +97,9 @@ class UserController extends Controller
                                 ->id
                         ]
                     );
+
+                    Log::debug("Se creó usuario:");
+                    Log::debug($record);
                 }
             }
 
