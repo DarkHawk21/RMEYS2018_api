@@ -57,10 +57,14 @@ class UserController extends Controller
 
     public function syncRegisters(Request $request)
     {
+        Log::debug("Request");
+        Log::debug($request);
         DB::beginTransaction();
 
         try {
             $records = $request->input('records', []);
+            Log::debug("Records");
+            Log::debug($records);
 
             foreach ($records as $record) {
                 if (isset($record['correo']) && (isset($record['idasesor']) || (isset($record['id']) && $record['asesor'] == 1))) {
