@@ -65,12 +65,16 @@ class WorkshopController extends Controller
 
     public function syncRegisters(Request $request)
     {
+        Log::debug("Request");
+        Log::debug($request);
         DB::beginTransaction();
 
         try {
             Workshop::truncate();
 
             $records = $request->input('records', []);
+            Log::debug("Records");
+            Log::debug($records);
 
             foreach ($records as $record) {
                 Workshop::create(
@@ -93,6 +97,7 @@ class WorkshopController extends Controller
                             ->id,
                     ]
                 );
+
                 Log::debug("Se creó taller:");
                 Log::debug($record);
             }
